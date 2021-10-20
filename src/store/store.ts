@@ -1,24 +1,35 @@
 import { MongoClient } from "mongodb";
 
-const url = "mongodb://localhost:27017";
-const client = new MongoClient(url);
+export interface dbProps {
+  mail?: string;
+  name?: string;
+  pin?: {};
+}
 
-// Database Name
-const dbName = "users";
-
-async function main() {
-  // Use connect method to connect to the server
+const database = async (props) => {
+  const url = "mongodb://localhost:27017";
+  const client = new MongoClient(url);
+  const dbName = "users";
   await client.connect();
   console.log("Connected successfully to server");
   const db = client.db(dbName);
   const collection = db.collection("user-list");
 
   const insertResult = await collection.insertMany([
-    { a: {id: "1", mail: "mail@mail.ch", name: "vor nach", pins: {123: "ablaufdatum"}} },
+    {
+      a: {
+        mail: "mail@mail.ch",
+        name: "vor nach",
+        verified: "",
+        pins: { 123: "ablaufdatum" },
+        created: "",
+      },
+    },
   ]);
-  console.log("Inserted documents =>", insertResult);
-
+     console.log("Inserted documents =>", insertResult);
+     
+  client.close()
   return "done.";
-}
+};
 
-main().then(() => client.close());
+export default database;
