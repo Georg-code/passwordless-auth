@@ -3,6 +3,7 @@ import mail from "./mail/mail";
 import { urlencoded } from "body-parser";
 import test from "./test/test";
 import create_token from "./token/token";
+import database from "./database/database";
 
 const app = express();
 const port = 3000;
@@ -14,17 +15,18 @@ app.listen(port, () => {
 });
 
 app.post("/api/send_code/", (req, res) => {
-
-
   if (test({ adress: String(req.body.adress) })) {
+    const adress = req.body.adress;
+    const pin = parseInt(create_token({ type: "pin" }));
+
+    database({pin, mail: adress, verified: false })
+
     mail({
-      message: "Das wird mal der Code",
-      adress: req.body.adress,
+      message: "Das wird mal der Code" + pin,
+      adress,
     }).catch();
     res.send(
-      "Auth code was sent to user. Email starts with: " +
-        String(req.body.adress).slice(0, 3) + "   TOKEN: " + create_token({type:"token"})
-    );
+      "Auth code was sent to user.");
   } else {
        res.send("Error");
   }
