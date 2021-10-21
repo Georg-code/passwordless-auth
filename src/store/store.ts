@@ -21,14 +21,15 @@ const database = async (props) => {
         mail: "mail@mail.ch",
         name: "vor nach",
         verified: "",
-        pins: { 123: "ablaufdatum" },
+        pin: { 123: "ablaufdatum" },
         created: "",
+        tokens: { 123: "abluafdatum" },
       },
     },
   ]);
-     console.log("Inserted documents =>", insertResult);
-     
-  client.close()
+  console.log("Inserted documents =>", insertResult);
+
+  client.close();
   return "done.";
 };
 

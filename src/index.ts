@@ -2,6 +2,7 @@ import express from "express";
 import mail from "./mail/mail";
 import { urlencoded } from "body-parser";
 import test from "./test/test";
+import create_token from "./token/token";
 
 const app = express();
 const port = 3000;
@@ -13,6 +14,10 @@ app.listen(port, () => {
 });
 
 app.post("/api/send_code/", (req, res) => {
+  console.log(create_token({ type: "pin" }))
+  console.log(create_token({type:"token"}))
+
+
   if (test({ adress: String(req.body.adress) })) {
     mail({
       message: "Das wird mal der Code",
