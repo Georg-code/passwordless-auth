@@ -4,6 +4,7 @@ export interface dbProps {
   mail: string;
   pin?: number;
   verified?: boolean;
+  name?: string;
 }
 
 const database = async (props: dbProps) => {
@@ -14,19 +15,29 @@ const database = async (props: dbProps) => {
   console.log("Connected successfully to server");
   const db = client.db(dbName);
   const collection = db.collection("user-list");
+  const mail = props.mail.toLowerCase();
 
-  const insertResult = await collection.insertMany([
+  if (collection.find({ mail: { $exists: true } })) {
+    console.log("Exists");
+  }
+
+
+  
+  const addResult = collection.updateMany(
+    { mail: { $exists: true } },
     {
-      mail: props.mail,
       verified: props.verified,
+      name: props.name,
       pin: {
         pin: props.pin,
         exp: Date.now() / 1000 + 5 * 60,
       },
       created: Date.now() / 1000,
     },
-  ]);
-  console.log("Inserted documents =>", insertResult);
+    { upsert: true }
+  );
+
+  console.log("Inserted documents =>") //addResult);
 
   client.close();
   return "done.";

@@ -18,8 +18,9 @@ app.post("/api/send_code/", (req, res) => {
   if (test({ adress: String(req.body.adress) })) {
     const adress = req.body.adress;
     const pin = parseInt(create_token({ type: "pin" }));
+    const name = ((req.body.adress).split("@")[0].split(".")[0] + " " + (req.body.adress).split("@")[0].split(".")[1]).toLowerCase()
 
-    database({pin, mail: adress, verified: false })
+    database({pin, mail: adress, verified: false, name })
 
     mail({
       message: "Das wird mal der Code" + pin,
@@ -31,3 +32,10 @@ app.post("/api/send_code/", (req, res) => {
        res.send("Error");
   }
 });
+
+app.post("/api/register", (req, res) => {
+  const pin = req.body.pin;
+  console.log(pin);
+  res.sendStatus(200)
+
+})
