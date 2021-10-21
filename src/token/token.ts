@@ -1,12 +1,14 @@
-import randtoken from 'rand-token';
-
+import jwt from 'jsonwebtoken';
+import { readFileSync } from 'fs';
 export interface create_tokenProps {
-  type: "pin" | "token";
+     type: "pin" | "token";
+     email?: string,
+
 }
 
 const create_token = (props) => {
-  if (props.type === "token") {
- return randtoken.generate(2048);
+     if (props.type === "token") {
+          return(jwt.sign({ mail: props.mail, exp: Math.floor(Date.now() / 1000) + 5*86400 }, 'shhhhh'));
   } else if (props.type == "pin") {
     const min = 0;
     const max = 999999;

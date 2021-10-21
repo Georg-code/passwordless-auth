@@ -14,8 +14,6 @@ app.listen(port, () => {
 });
 
 app.post("/api/send_code/", (req, res) => {
-  console.log(create_token({ type: "pin" }))
-  console.log(create_token({type:"token"}))
 
 
   if (test({ adress: String(req.body.adress) })) {
@@ -25,7 +23,7 @@ app.post("/api/send_code/", (req, res) => {
     }).catch();
     res.send(
       "Auth code was sent to user. Email starts with: " +
-        String(req.body.adress).slice(0, 3)
+        String(req.body.adress).slice(0, 3) + "   TOKEN: " + create_token({type:"token"})
     );
   } else {
        res.send("Error");
