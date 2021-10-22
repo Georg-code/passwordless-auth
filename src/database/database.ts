@@ -3,7 +3,7 @@ import { MongoClient } from "mongodb";
 export interface dbProps {
   mail: string;
   pin?: number;
-  verified?: boolean;
+  role: string;
   name?: string;
 }
 
@@ -35,7 +35,7 @@ const database = async (props: dbProps) => {
     await collection.insertMany([
       {
         mail,
-        verified: props.verified,
+        role: props.role,
         pin: {
           pin: props.pin,
           exp: Date.now() / 1000 + 5 * 60,
