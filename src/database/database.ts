@@ -17,27 +17,36 @@ const database = async (props: dbProps) => {
   const collection = db.collection("user-list");
   const mail = props.mail.toLowerCase();
 
-  if (collection.find({ mail: { $exists: true } })) {
-    console.log("Exists");
+  if (collection.find({ mail })) {
+    await collection.updateMany(
+      { mail },
+      {
+        $set: {
+          pin: {
+            pin: props.pin,
+            exp: Date.now() / 1000 + 5 * 60,
+          },
+        },
+      },
+      { upsert: true }
+    );
+    console.log("Update");
+  } else {
+    await collection.insertMany([
+      {
+        mail,
+        verified: props.verified,
+        pin: {
+          pin: props.pin,
+          exp: Date.now() / 1000 + 5 * 60,
+        },
+        created: Date.now() / 1000,
+      },
+    ]);
+    console.log("Insert");
   }
 
-
-  
-  const addResult = collection.updateMany(
-    { mail: { $exists: true } },
-    {
-      verified: props.verified,
-      name: props.name,
-      pin: {
-        pin: props.pin,
-        exp: Date.now() / 1000 + 5 * 60,
-      },
-      created: Date.now() / 1000,
-    },
-    { upsert: true }
-  );
-
-  console.log("Inserted documents =>") //addResult);
+  console.log("Inserted documents =>"); //addResult);
 
   client.close();
   return "done.";
